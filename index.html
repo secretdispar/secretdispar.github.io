@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Absensi PPPK PW Disparekrafpora Gunungkidul</title>
+<style>
+:root{--ink:#16302b;--mut:#5d7570;--bg:#f3f6f4;--card:#fff;--line:#dbe4e0;--pri:#0f5c4d;--pri2:#0b4338;--acc:#e0a030;--bad:#b3261e;--ok:#1f7a3f;--warn:#a86400;--r:10px}
+*{box-sizing:border-box}
+body{margin:0;font:15px/1.5 "Plus Jakarta Sans",system-ui,-apple-system,Segoe UI,Roboto,sans-serif;background:var(--bg);color:var(--ink)}
+h1,h2,h3{margin:0;line-height:1.25}
+button,input,select{font:inherit}
+.hide{display:none!important}
+.mut{color:var(--mut)}
+/* login */
+#login{min-height:100vh;display:grid;place-items:center;padding:20px;background:linear-gradient(160deg,var(--pri2),var(--pri))}
+.lbox{background:#fff;border-radius:16px;padding:28px;width:100%;max-width:380px;border-top:6px solid var(--acc)}
+.lbox h1{font-size:19px;margin-bottom:4px}
+/* shell */
+header{background:var(--pri);color:#fff;padding:10px 16px;display:flex;align-items:center;gap:12px;position:sticky;top:0;z-index:5}
+header b{font-size:14px;flex:1;line-height:1.2}
+header small{opacity:.8;display:block;font-weight:400}
+nav{display:flex;gap:2px;overflow-x:auto;background:var(--pri2);padding:0 8px;position:sticky;top:52px;z-index:4}
+nav button{background:none;border:0;color:#cfe5df;padding:11px 14px;cursor:pointer;white-space:nowrap;border-bottom:3px solid transparent}
+nav button.on{color:#fff;border-color:var(--acc);font-weight:600}
+main{max-width:1100px;margin:0 auto;padding:16px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:16px;margin-bottom:14px}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:flex-end;margin-bottom:12px}
+.row>*{flex:0 1 auto}
+label{display:block;font-size:12.5px;color:var(--mut);margin-bottom:3px}
+input,select{width:100%;padding:9px 10px;border:1px solid var(--line);border-radius:8px;background:#fff;color:var(--ink)}
+input:focus,select:focus,button:focus-visible{outline:2px solid var(--acc);outline-offset:1px}
+.btn{background:var(--pri);color:#fff;border:0;border-radius:8px;padding:9px 16px;cursor:pointer;font-weight:600}
+.btn:hover{background:var(--pri2)}.btn:disabled{opacity:.5;cursor:not-allowed}
+.btn.s{padding:4px 10px;font-size:13px}
+.btn.g{background:#e6eeeb;color:var(--ink)}.btn.g:hover{background:#d5e2dd}
+.btn.d{background:var(--bad)}
+.btn.big{padding:16px;font-size:17px;width:100%}
+.grid{display:grid;gap:12px;grid-template-columns:repeat(auto-fit,minmax(150px,1fr))}
+.stat{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:12px 14px}
+.stat b{font-size:26px;display:block}
+.tw{overflow-x:auto}
+table{border-collapse:collapse;width:100%;font-size:13.5px}
+th,td{padding:8px 10px;border-bottom:1px solid var(--line);text-align:left;white-space:nowrap}
+th{background:#eef3f1;font-weight:600;position:sticky;top:0}
+.tag{display:inline-block;padding:1px 9px;border-radius:99px;font-size:12px;background:#e6eeeb}
+.tag.ok{background:#dff3e6;color:var(--ok)}.tag.bad{background:#fbe3e1;color:var(--bad)}.tag.warn{background:#fdeccf;color:var(--warn)}
+.clock{font-size:46px;font-weight:700;letter-spacing:-1px;font-variant-numeric:tabular-nums}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.box{border:1px solid var(--line);border-radius:var(--r);padding:12px}
+.box b{display:block;font-size:22px}
+#msg{margin:12px 0;padding:10px 12px;border-radius:8px;background:#eef3f1}
+#msg.ok{background:#dff3e6;color:var(--ok)}#msg.bad{background:#fbe3e1;color:var(--bad)}
+#toast{position:fixed;bottom:18px;left:50%;transform:translateX(-50%);background:var(--ink);color:#fff;padding:10px 18px;border-radius:8px;z-index:30;max-width:90vw}
+.modal{position:fixed;inset:0;background:rgba(0,0,0,.45);display:grid;place-items:center;padding:14px;z-index:20}
+.modal form{background:#fff;border-radius:14px;padding:20px;width:100%;max-width:440px;max-height:90vh;overflow:auto}
+.modal .f{margin-bottom:10px}.modal .chk{display:flex;gap:8px;align-items:center}.modal .chk input{width:auto}
+.err{color:var(--bad);min-height:20px;font-size:13.5px}
+@media(max-width:560px){.clock{font-size:38px}}
+@media(prefers-reduced-motion:no-preference){.card{animation:in .25s}}@keyframes in{from{opacity:0}to{opacity:1}}
+</style>
+</head>
+<body>
+<!-- ====== GANTI URL INI dengan URL Web App Apps Script Anda (berakhiran /exec) ====== -->
+<script>const API_URL='https://script.google.com/macros/s/AKfycbwQeevl713dFLYhr9rvJKP6YtpzVhSnrcSvoHSss87dbD4oTwi1k7c2jia9kDMRKtttdQ/exec';</script>
+
+<section id="login">
+  <form class="lbox" id="lf">
+    <h1>Absensi PPPK PW</h1>
+    <p class="mut" style="margin:0 0 18px">Disparekrafpora Kabupaten Gunungkidul</p>
+    <div class="f" style="margin-bottom:10px"><label for="u">Username</label><input id="u" autocomplete="username" required></div>
+    <div class="f" style="margin-bottom:10px"><label for="p">Password</label><input id="p" type="password" autocomplete="current-password" required></div>
+    <div class="err" id="le"></div>
+    <button class="btn big" id="lb">Masuk</button>
+  </form>
+</section>
+
+<div id="app" class="hide">
+  <header><b id="hn"></b><button class="btn g s" id="lo">Keluar</button></header>
+  <nav id="nav"></nav>
+  <main id="main"></main>
+</div>
+<div id="toast" class="hide"></div>
+
+<script>
+const $=s=>document.querySelector(s);
+const esc=v=>String(v==null?'':v).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const hm=v=>v?String(v).slice(0,5):'-';
+let TOKEN=localStorage.getItem('tok')||'',USER=null,BIDANG=[],TIMER=null;
+
+async function api(action,d){
+  let r;
+  try{
+    r=await fetch(API_URL,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify(Object.assign({action,token:TOKEN},d||{}))}).then(x=>x.json());
+  }catch(e){throw new Error('Tidak dapat terhubung ke server. Periksa koneksi dan URL Web App.')}
+  if(!r.ok){
+    if(r.code==='AUTH'&&action!=='login'){bye();}
+    const e=new Error(r.error||'Terjadi kesalahan.');e.code=r.code;throw e;
+  }
+  return r;
+}
+function toast(t){const e=$('#toast');e.textContent=t;e.classList.remove('hide');clearTimeout(toast.t);toast.t=setTimeout(()=>e.classList.add('hide'),3200)}
+async function run(fn){try{await fn()}catch(e){toast(e.message)}}
+
+/* ---------- login / sesi ---------- */
+$('#lf').onsubmit=async ev=>{
+  ev.preventDefault();$('#le').textContent='';$('#lb').disabled=true;
+  try{
+    const r=await api('login',{username:$('#u').value,password:$('#p').value});
+    TOKEN=r.token;localStorage.setItem('tok',TOKEN);USER=r.user;BIDANG=r.bidang;start();
+  }catch(e){$('#le').textContent=e.message}
+  $('#lb').disabled=false;
+};
+$('#lo').onclick=async()=>{try{await api('logout')}catch(e){}bye()};
+function bye(){TOKEN='';localStorage.removeItem('tok');clearInterval(TIMER);$('#app').classList.add('hide');$('#login').classList.remove('hide');$('#p').value=''}
+async function boot(){
+  if(API_URL.startsWith('GANTI'))return($('#le').textContent='URL Web App belum diisi di file index.html.');
+  if(!TOKEN)return;
+  try{const r=await api('me');USER=r.user;BIDANG=r.bidang;start()}catch(e){}
+}
+function start(){
+  $('#login').classList.add('hide');$('#app').classList.remove('hide');
+  $('#hn').innerHTML=esc(USER.Nama)+'<small>'+esc(USER.Role==='ADMIN'?'Administrator':USER.Bidang)+'</small>';
+  const adm=USER.Role==='ADMIN';
+  const tabs=adm?[['dash','Dashboard'],['mon','Monitoring'],['rekapA','Rekap'],['users','Pegawai'],['gps','Lokasi GPS'],['set','Pengaturan'],['hol','Hari Libur'],['log','Log'],['akun','Akun']]
+               :[['absen','Absen'],['riw','Riwayat'],['rekap','Rekap Saya'],['akun','Akun']];
+  $('#nav').innerHTML=tabs.map(t=>`<button data-t="${t[0]}">${t[1]}</button>`).join('');
+  $('#nav').onclick=e=>{const t=e.target.dataset.t;if(t)go(t)};
+  go(tabs[0][0]);
+}
+function go(t){
+  clearInterval(TIMER);
+  document.querySelectorAll('#nav button').forEach(b=>b.classList.toggle('on',b.dataset.t===t));
+  $('#main').innerHTML='<p class="mut">Memuat…</p>';
+  run(()=>V[t]());
+}
+
+/* ---------- util UI ---------- */
+function tbl(heads,rows,empty){
+  if(!rows.length)return `<p class="mut">${empty||'Belum ada data.'}</p>`;
+  return `<div class="tw"><table><thead><tr>${heads.map(h=>`<th>${h}</th>`).join('')}</tr></thead><tbody>${rows.map(r=>`<tr>${r.map(c=>`<td>${c}</td>`).join('')}</tr>`).join('')}</tbody></table></div>`;
+}
+const stTag=s=>s==='Tepat Waktu'?'<span class="tag ok">Tepat Waktu</span>':s==='Terlambat'?'<span class="tag warn">Terlambat</span>':s==='Belum Absen'?'<span class="tag bad">Belum Absen</span>':s?`<span class="tag">${esc(s)}</span>`:'-';
+const opts=(a,sel,all)=>(all!==undefined?`<option value="">${all}</option>`:'')+a.map(x=>{const v=Array.isArray(x)?x[0]:x,l=Array.isArray(x)?x[1]:x;return `<option value="${esc(v)}"${String(v)===String(sel)?' selected':''}>${esc(l)}</option>`}).join('');
+const today=()=>new Date(Date.now()+(new Date().getTimezoneOffset()+420)*60000).toISOString().slice(0,10);
+
+function form(title,fields,onSave){
+  const m=document.createElement('div');m.className='modal';
+  m.innerHTML=`<form><h3 style="margin-bottom:14px">${esc(title)}</h3>${fields.map(f=>{
+    const v=f.v==null?'':f.v,id='f_'+f.k;
+    if(f.t==='check')return `<div class="f chk"><input type="checkbox" id="${id}"${v?' checked':''}><label for="${id}" style="margin:0">${f.l}</label></div>`;
+    if(f.t==='select')return `<div class="f"><label for="${id}">${f.l}</label><select id="${id}">${opts(f.o,v)}</select></div>`;
+    return `<div class="f"><label for="${id}">${f.l}</label><input id="${id}" type="${f.t||'text'}" value="${esc(v)}"${f.step?` step="${f.step}"`:''}${f.ph?` placeholder="${esc(f.ph)}"`:''}></div>`}).join('')}
+    <div class="err"></div><div class="row" style="justify-content:flex-end;margin:0"><button type="button" class="btn g" id="x">Batal</button><button class="btn">Simpan</button></div></form>`;
+  document.body.appendChild(m);
+  m.querySelector('#x').onclick=()=>m.remove();
+  m.querySelector('form').onsubmit=async e=>{
+    e.preventDefault();const d={};
+    fields.forEach(f=>{const el=m.querySelector('#f_'+f.k);d[f.k]=f.t==='check'?el.checked:el.value});
+    try{await onSave(d);m.remove()}catch(x){m.querySelector('.err').textContent=x.message}
+  };
+}
+async function download(r){
+  const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([r.csv],{type:'text/csv;charset=utf-8'}));a.download=r.filename;a.click();URL.revokeObjectURL(a.href);
+}
+function getPos(){
+  return new Promise((ok,no)=>{
+    if(!navigator.geolocation)return no(new Error('Peramban tidak mendukung GPS.'));
+    navigator.geolocation.getCurrentPosition(p=>ok({latitude:p.coords.latitude,longitude:p.coords.longitude,accuracy:p.coords.accuracy,isMock:false}),
+      e=>no(new Error(e.code===1?'Izin lokasi ditolak. Aktifkan izin lokasi untuk situs ini.':'Lokasi tidak dapat diambil. Aktifkan GPS lalu coba lagi.')),
+      {enableHighAccuracy:true,timeout:20000,maximumAge:0});
+  });
+}
+
+/* ---------- tampilan ---------- */
+const V={};
+
+V.absen=async()=>{
+  const h=await api('home');let off=h.serverEpochMs-Date.now(),t=h.today||{};
+  const draw=()=>{
+    $('#main').innerHTML=`<div class="card"><div class="mut">${esc(h.hari)}, ${esc(h.tanggal)}</div><div class="clock" id="ck"></div>
+    <p class="mut" style="margin:4px 0 14px">Jam kerja ${esc(h.jamMasuk)} – ${esc(h.jamPulang)} WIB${h.toleransiMenit?` (toleransi ${h.toleransiMenit} menit)`:''}</p>
+    ${!h.isWorkday?`<div id="msg">${h.holiday?'Hari ini libur: '+esc(h.holiday):'Hari ini bukan hari kerja.'}</div>`:''}
+    <div class="two"><div class="box"><span class="mut">Masuk</span><b>${hm(t.JamMasuk)}</b>${stTag(t.StatusMasuk)}</div>
+    <div class="box"><span class="mut">Pulang</span><b>${hm(t.JamPulang)}</b>${stTag(t.StatusPulang)}</div></div>
+    <div id="msg" class="hide"></div>
+    <div class="two" style="margin-top:12px"><button class="btn big" id="bi"${!h.isWorkday||t.JamMasuk?' disabled':''}>Absen Masuk</button>
+    <button class="btn big" id="bo"${!h.isWorkday||!t.JamMasuk||t.JamPulang?' disabled':''}>Absen Pulang</button></div>
+    <button class="btn g" id="bc" style="margin-top:10px;width:100%">Cek lokasi saya</button>
+    <p class="mut" style="font-size:13px;margin-bottom:0">${h.points.length?'Lokasi penugasan: '+h.points.map(p=>esc(p.NamaLokasi)+' (radius '+p.RadiusMeter+' m)').join(', '):'Anda belum memiliki titik GPS penugasan. Hubungi admin.'}</p></div>`;
+    const tick=()=>{$('#ck').textContent=new Date(Date.now()+off).toLocaleTimeString('id-ID',{timeZone:'Asia/Jakarta',hour12:false}).replace(/\./g,':')};
+    tick();TIMER=setInterval(tick,1000);
+    const say=(m,c)=>{const e=document.querySelectorAll('#msg');const x=e[e.length-1];x.className=c||'';x.textContent=m};
+    const act=async a=>{
+      say('Mengambil lokasi…');
+      try{
+        const p=await getPos();say('Mengirim…');
+        const r=await api(a,p);t=r.absensi;say(r.message,'ok');
+        clearInterval(TIMER);const keep=r.message;draw();say(keep,'ok');
+      }catch(e){say(e.message,'bad')}
+    };
+    $('#bi').onclick=()=>act('checkIn');$('#bo').onclick=()=>act('checkOut');
+    $('#bc').onclick=async()=>{say('Mengambil lokasi…');try{const r=await api('checkLocation',await getPos());const c=r.cek;say(c.message+(c.jarak!==undefined?` (jarak ${c.jarak} m, akurasi ${c.akurasi} m)`:''),c.ok?'ok':'bad')}catch(e){say(e.message,'bad')}};
+  };
+  draw();
+};
+
+V.riw=async()=>{
+  const ym=today().slice(0,7);
+  $('#main').innerHTML=`<div class="card"><div class="row"><div><label>Bulan</label><input type="month" id="m" value="${ym}"></div></div><div id="o"></div></div>`;
+  const load=()=>run(async()=>{const r=await api('myHistory',{month:$('#m').value});
+    $('#o').innerHTML=tbl(['Tanggal','Masuk','Status','Pulang','Status Pulang','Lokasi'],r.rows.map(x=>[x.Tanggal,hm(x.JamMasuk),stTag(x.StatusMasuk),hm(x.JamPulang),stTag(x.StatusPulang),esc(x.LokasiMasuk)]))});
+  $('#m').onchange=load;load();
+};
+
+V.rekap=async()=>{
+  $('#main').innerHTML=`<div class="card"><div class="row"><div><label>Periode</label><select id="pr">${opts([['mingguan','Minggu ini'],['bulanan','Bulan ini'],['tahunan','Tahun ini']],'bulanan')}</select></div></div><div id="o"></div></div>`;
+  const load=()=>run(async()=>{const r=await api('myRecap',{period:$('#pr').value});const k=r.rekap;
+    $('#o').innerHTML=!k?'<p class="mut">Belum ada data.</p>':`<p class="mut">${r.from} s.d. ${r.to}</p><div class="grid">${[['Hari kerja',k.hariKerja],['Hadir',k.hadir],['Tepat waktu',k.tepatWaktu],['Terlambat',k.terlambat],['Pulang cepat',k.pulangCepat],['Tanpa keterangan',k.tanpaKeterangan],['Kehadiran',k.persenKehadiran+'%']].map(s=>`<div class="stat"><span class="mut">${s[0]}</span><b>${s[1]}</b></div>`).join('')}</div>`});
+  $('#pr').onchange=load;load();
+};
+
+V.akun=async()=>{
+  $('#main').innerHTML=`<div class="card" style="max-width:420px"><h3 style="margin-bottom:4px">${esc(USER.Nama)}</h3><p class="mut" style="margin-top:0">${esc(USER.Username)} · ${esc(USER.NIP||'tanpa NIP')} · ${esc(USER.Bidang)}</p>
+  <h3 style="margin:16px 0 10px;font-size:16px">Ganti password</h3>
+  <div class="f" style="margin-bottom:10px"><label>Password lama</label><input type="password" id="o1"></div>
+  <div class="f" style="margin-bottom:10px"><label>Password baru (min. 6 karakter)</label><input type="password" id="n1"></div>
+  <button class="btn" id="sv">Simpan password</button></div>`;
+  $('#sv').onclick=()=>run(async()=>{const r=await api('changePassword',{oldPassword:$('#o1').value,newPassword:$('#n1').value});toast(r.message);$('#o1').value=$('#n1').value=''});
+};
+
+/* ----- admin ----- */
+V.dash=async()=>{
+  $('#main').innerHTML=`<div class="card"><div class="row"><div><label>Tanggal</label><input type="date" id="d" value="${today()}"></div></div><div id="o"></div></div>`;
+  const load=()=>run(async()=>{const r=await api('dashboard',{date:$('#d').value});
+    $('#o').innerHTML=`<p class="mut">${esc(r.hari)}${r.holiday?' · Libur: '+esc(r.holiday):r.isWorkday?'':' · Bukan hari kerja'}</p>
+    <div class="grid">${[['Pegawai aktif',r.totalPegawai],['Sudah masuk',r.sudahMasuk],['Sudah pulang',r.sudahPulang],['Terlambat',r.terlambat],['Belum absen',r.belumAbsen]].map(s=>`<div class="stat"><span class="mut">${s[0]}</span><b>${s[1]}</b></div>`).join('')}</div>
+    <h3 style="margin:18px 0 8px;font-size:16px">Per bidang</h3>${tbl(['Bidang','Pegawai','Hadir'],r.perBidang.map(x=>[esc(x.bidang),x.total,x.hadir]))}`});
+  $('#d').onchange=load;load();
+};
+
+V.mon=async()=>{
+  $('#main').innerHTML=`<div class="card"><div class="row">
+  <div><label>Dari</label><input type="date" id="a" value="${today()}"></div><div><label>Sampai</label><input type="date" id="b" value="${today()}"></div>
+  <div><label>Bidang</label><select id="bd">${opts(BIDANG,'','Semua')}</select></div>
+  <div><label>Status</label><select id="st">${opts(['Semua','Tepat Waktu','Terlambat','Belum Absen','Belum Pulang'])}</select></div>
+  <div><label>Cari nama/NIP</label><input id="q"></div><button class="btn" id="go">Tampilkan</button><button class="btn g" id="ex">Unduh CSV</button></div><div id="o"></div></div>`;
+  const P=()=>({from:$('#a').value,to:$('#b').value,bidang:$('#bd').value,status:$('#st').value,q:$('#q').value});
+  const load=()=>run(async()=>{const r=await api('monitoring',P());
+    $('#o').innerHTML=`<p class="mut">${r.total} data</p>`+tbl(['Tanggal','Nama','Bidang','Masuk','Status','Pulang','Lokasi','Jarak',''],r.rows.map((x,i)=>[x.Tanggal,esc(x.Nama),esc(x.Bidang),hm(x.JamMasuk),stTag(x.Status),hm(x.JamPulang),esc(x.LokasiMasuk||'-'),x.JarakMasuk!==undefined&&x.JarakMasuk!==''?x.JarakMasuk+' m':'-',`<button class="btn g s" data-i="${i}">Koreksi</button>`]));
+    $('#o').onclick=e=>{const i=e.target.dataset.i;if(i===undefined)return;const x=r.rows[i];
+      form(`Koreksi ${x.Nama} (${x.Tanggal})`,[{k:'jamMasuk',l:'Jam masuk',t:'time',v:hm(x.JamMasuk).replace('-','')},{k:'jamPulang',l:'Jam pulang',t:'time',v:hm(x.JamPulang).replace('-','')},{k:'keterangan',l:'Keterangan',v:x.Keterangan},{k:'alasan',l:'Alasan koreksi (wajib)'}],
+        async d=>{await api('correctAttendance',Object.assign(d,{userId:x.UserID,tanggal:x.Tanggal}));toast('Koreksi disimpan.');load()})}});
+  $('#go').onclick=load;$('#ex').onclick=()=>run(async()=>download(await api('exportCsv',Object.assign(P(),{type:'absensi'}))));load();
+};
+
+V.rekapA=async()=>{
+  $('#main').innerHTML=`<div class="card"><div class="row">
+  <div><label>Periode</label><select id="pr">${opts([['harian','Harian'],['mingguan','Mingguan'],['bulanan','Bulanan'],['tahunan','Tahunan']],'bulanan')}</select></div>
+  <div><label>Tanggal acuan</label><input type="date" id="d" value="${today()}"></div>
+  <div><label>Bidang</label><select id="bd">${opts(BIDANG,'','Semua')}</select></div>
+  <button class="btn" id="go">Tampilkan</button><button class="btn g" id="ex">Unduh CSV</button></div><div id="o"></div></div>`;
+  const P=()=>({period:$('#pr').value,date:$('#d').value,bidang:$('#bd').value});
+  const load=()=>run(async()=>{const r=await api('recap',P());
+    $('#o').innerHTML=`<p class="mut">${r.from} s.d. ${r.to} · ${r.hariKerja} hari kerja</p>`+tbl(['Nama','Bidang','Hadir','Tepat','Terlambat','Pulang cepat','Tanpa pulang','Alpa','%'],r.rows.map(x=>[esc(x.Nama),esc(x.Bidang),x.hadir,x.tepatWaktu,x.terlambat,x.pulangCepat,x.tanpaAbsenPulang,x.tanpaKeterangan,x.persenKehadiran+'%']))});
+  $('#go').onclick=load;$('#ex').onclick=()=>run(async()=>download(await api('exportCsv',Object.assign(P(),{type:'rekap'}))));load();
+};
+
+V.users=async()=>{
+  $('#main').innerHTML=`<div class="card"><div class="row"><div><label>Cari</label><input id="q"></div><div><label>Bidang</label><select id="bd">${opts(BIDANG,'','Semua')}</select></div><button class="btn" id="go">Cari</button><button class="btn g" id="add">+ Tambah pegawai</button></div><div id="o"></div></div>`;
+  const edit=u=>form(u?'Ubah pegawai':'Tambah pegawai',[
+    {k:'username',l:'Username',v:u&&u.Username},{k:'nama',l:'Nama lengkap',v:u&&u.Nama},{k:'nip',l:'NIP / No. identitas',v:u&&u.NIP},
+    {k:'role',l:'Role',t:'select',o:['PEGAWAI','ADMIN'],v:u?u.Role:'PEGAWAI'},{k:'bidang',l:'Bidang',t:'select',o:BIDANG,v:u&&u.Bidang},
+    {k:'password',l:u?'Password baru (kosongkan jika tidak diubah)':'Password (min. 6 karakter)',t:'password'},{k:'statusAktif',l:'Akun aktif',t:'check',v:u?u.StatusAktif:true}],
+    async d=>{if(u)d.userId=u.UserID;await api('saveUser',d);toast('Tersimpan.');load()});
+  const load=()=>run(async()=>{const r=await api('listUsers',{q:$('#q').value,bidang:$('#bd').value});
+    $('#o').innerHTML=tbl(['Nama','Username','NIP','Bidang','Role','Status','Titik GPS',''],r.users.map((u,i)=>[esc(u.Nama),esc(u.Username),esc(u.NIP),esc(u.Bidang),u.Role,u.StatusAktif?'<span class="tag ok">Aktif</span>':'<span class="tag bad">Nonaktif</span>',u.jumlahTitikGps,
+      `<button class="btn g s" data-a="e" data-i="${i}">Ubah</button> <button class="btn g s" data-a="t" data-i="${i}">${u.StatusAktif?'Nonaktifkan':'Aktifkan'}</button> <button class="btn d s" data-a="x" data-i="${i}">Hapus</button>`]));
+    $('#o').onclick=e=>{const a=e.target.dataset.a;if(!a)return;const u=r.users[e.target.dataset.i];
+      if(a==='e')edit(u);
+      if(a==='t')run(async()=>{await api('setUserActive',{userId:u.UserID,statusAktif:!u.StatusAktif});load()});
+      if(a==='x'&&confirm('Hapus '+u.Nama+'? Jika punya riwayat absensi, hapus akan ditolak (nonaktifkan saja).'))run(async()=>{await api('deleteUser',{userId:u.UserID});toast('Dihapus.');load()})}});
+  $('#go').onclick=load;$('#add').onclick=()=>edit(null);load();
+};
+
+V.gps=async()=>{
+  const us=(await api('listUsers',{})).users.filter(u=>u.Role==='PEGAWAI');
+  $('#main').innerHTML=`<div class="card"><div class="row"><div><label>Bidang</label><select id="bd">${opts(BIDANG,'','Semua')}</select></div><button class="btn g" id="add">+ Tambah titik</button></div>
+  <p class="mut" style="font-size:13px">Titik bidang berlaku untuk semua pegawai di bidang itu; titik individu hanya untuk satu pegawai. Tips: salin koordinat dari Google Maps (klik kanan pada lokasi).</p><div id="o"></div></div>`;
+  const edit=p=>form(p?'Ubah titik GPS':'Tambah titik GPS',[
+    {k:'namaLokasi',l:'Nama lokasi',v:p&&p.NamaLokasi},{k:'userId',l:'Pegawai (kosong = titik bidang)',t:'select',o:[['','— titik bidang —']].concat(us.map(u=>[u.UserID,u.Nama])),v:p&&p.UserID},
+    {k:'bidang',l:'Bidang (jika titik bidang)',t:'select',o:BIDANG,v:p&&p.Bidang},{k:'latitude',l:'Latitude',v:p&&p.Latitude,ph:'-7.96'},{k:'longitude',l:'Longitude',v:p&&p.Longitude,ph:'110.60'},
+    {k:'radiusMeter',l:'Radius (meter)',t:'number',v:p?p.RadiusMeter:''},{k:'maxAccuracy',l:'Akurasi maksimum (meter)',t:'number',v:p?p.MaxAccuracy:''},{k:'keterangan',l:'Keterangan',v:p&&p.Keterangan},{k:'statusAktif',l:'Aktif',t:'check',v:p?p.StatusAktif:true}],
+    async d=>{if(p)d.lokasiId=p.LokasiID;await api('saveGps',d);toast('Tersimpan.');load()});
+  const load=()=>run(async()=>{const r=await api('listGps',{bidang:$('#bd').value});const nm={};us.forEach(u=>nm[u.UserID]=u.Nama);
+    $('#o').innerHTML=tbl(['Lokasi','Untuk','Koordinat','Radius','Maks. akurasi','Status',''],r.rows.map((p,i)=>[esc(p.NamaLokasi),p.UserID?esc(nm[p.UserID]||p.UserID):esc(p.Bidang)+' <span class="tag">bidang</span>',p.Latitude+', '+p.Longitude,p.RadiusMeter+' m',p.MaxAccuracy+' m',p.StatusAktif?'<span class="tag ok">Aktif</span>':'<span class="tag bad">Nonaktif</span>',
+      `<button class="btn g s" data-a="e" data-i="${i}">Ubah</button> <button class="btn d s" data-a="x" data-i="${i}">Hapus</button>`]));
+    $('#o').onclick=e=>{const a=e.target.dataset.a;if(!a)return;const p=r.rows[e.target.dataset.i];
+      if(a==='e')edit(p);if(a==='x'&&confirm('Hapus titik "'+p.NamaLokasi+'"?'))run(async()=>{await api('deleteGps',{lokasiId:p.LokasiID});load()})}});
+  $('#bd').onchange=load;$('#add').onclick=()=>edit(null);load();
+};
+
+V.set=async()=>{
+  const r=await api('getSettings');
+  $('#main').innerHTML=`<div class="card" style="max-width:560px"><p class="mut" style="margin-top:0">Zona waktu: ${esc(r.zonaWaktu)}</p>${r.settings.map(s=>`<div style="margin-bottom:10px"><label for="s_${s.Parameter}">${esc(s.Parameter)} — ${esc(s.Keterangan)}</label><input id="s_${s.Parameter}" value="${esc(s.Nilai)}"></div>`).join('')}<button class="btn" id="sv">Simpan pengaturan</button></div>`;
+  $('#sv').onclick=()=>run(async()=>{const v={};r.settings.forEach(s=>v[s.Parameter]=$('#s_'+s.Parameter).value);await api('saveSettings',{values:v});toast('Pengaturan disimpan.')});
+};
+
+V.hol=async()=>{
+  $('#main').innerHTML=`<div class="card"><div class="row"><div><label>Tahun</label><input id="y" type="number" value="${today().slice(0,4)}" style="width:100px"></div><button class="btn g" id="add">+ Tambah hari libur</button></div><div id="o"></div></div>`;
+  const load=()=>run(async()=>{const r=await api('listHoliday',{year:$('#y').value});
+    $('#o').innerHTML=tbl(['Tanggal','Nama','Keterangan',''],r.rows.map((h,i)=>[h.Tanggal,esc(h.NamaHariLibur),esc(h.Keterangan),`<button class="btn d s" data-i="${i}">Hapus</button>`]));
+    $('#o').onclick=e=>{const i=e.target.dataset.i;if(i===undefined)return;run(async()=>{await api('deleteHoliday',{tanggal:r.rows[i].Tanggal});load()})}});
+  $('#y').onchange=load;
+  $('#add').onclick=()=>form('Tambah hari libur',[{k:'tanggal',l:'Tanggal',t:'date'},{k:'nama',l:'Nama hari libur'},{k:'keterangan',l:'Keterangan'}],async d=>{await api('saveHoliday',d);toast('Tersimpan.');load()});
+  load();
+};
+
+V.log=async()=>{
+  $('#main').innerHTML=`<div class="card"><div class="row"><div><label>Cari</label><input id="q"></div><button class="btn" id="go">Cari</button></div><div id="o"></div></div>`;
+  const load=()=>run(async()=>{const r=await api('logs',{q:$('#q').value,limit:200});
+    $('#o').innerHTML=tbl(['Waktu','Pengguna','Aktivitas','Keterangan'],r.rows.map(x=>[x.Waktu,esc(x.Nama||x.UserID),esc(x.Aktivitas),`<span style="white-space:normal;display:block;max-width:420px">${esc(x.Keterangan)}</span>`]))});
+  $('#go').onclick=load;load();
+};
+
+boot();
+</script>
+</body>
+</html>
